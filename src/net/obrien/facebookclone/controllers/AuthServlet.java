@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.obrien.facebookclone.dao.AuthDAO;
 import net.obrien.facebookclone.model.User;
@@ -27,14 +28,26 @@ public class AuthServlet extends HttpServlet {
 	        String jdbcURL = getServletContext().getInitParameter("jdbcURL");
 	        String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
 	        String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
-	 
-	        authDAO = new AuthDAO(jdbcURL, jdbcUsername, jdbcPassword);
+	        String jdbcDatabase = getServletContext().getInitParameter("jdbcDatabase");
+	        authDAO = new AuthDAO(jdbcURL, jdbcUsername, jdbcPassword, jdbcDatabase);
 	 
 	    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("views/auth.jsp");
-        dispatcher.forward(request, response);
+    	try {
+    		String action = request.getServletPath();
+    		if("/logout".equals(action)) {
+        		signOut(request, response);
+        	}else {
+        		RequestDispatcher dispatcher = request.getRequestDispatcher("views/auth.jsp");
+                dispatcher.forward(request, response);
+        	}
+        	
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -48,27 +61,37 @@ public class AuthServlet extends HttpServlet {
     	            case "/signup":
     	               signIn(request, response);
     	                break;
-  
+    	            case"/logout":
+    	            	
     	            }
     	        } catch (SQLException ex) {
     	            throw new ServletException(ex);
     	        }
     }
     
+    
+    private void signOut(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
+    	 HttpSession session = request.getSession();
+    	 session.invalidate();
+    	 response.sendRedirect("login");
+    }
+    
+    
     private void login(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
     	
      DataBaseResponse reqStatus = authDAO.userLogin(new UserSignIn(request.getParameter("login-email"), request.getParameter("login-password")));
-     
+     HttpSession session = request.getSession();
      if(!reqStatus.isStatus()) {
-    	 System.out.println("Failed Login");
+    	
     	 request.setAttribute("reqStatus", reqStatus);
     	 RequestDispatcher dispatcher = request.getRequestDispatcher("views/auth.jsp");
          dispatcher.forward(request, response);
      }else {
-    	 System.out.println("Success login");
-    	 request.setAttribute("reqStatus", reqStatus);
-    	 RequestDispatcher dispatcher = request.getRequestDispatcher("views/auth.jsp");
-         dispatcher.forward(request, response);
+    	 User user =(User) reqStatus.getData();
+    	 session.setAttribute("user", String.format("%s %s", user.getLastname(), user.getFirstname()));
+    	 session.setAttribute("user_id", user.getId());
+    	 session.setMaxInactiveInterval(60 * 60 * 60);
+    	 response.sendRedirect("home");
      }
     	
     }
@@ -82,7 +105,7 @@ public class AuthServlet extends HttpServlet {
     	String mobile = request.getParameter("mobile-reg");
     	String password = request.getParameter("password-reg");
     	String sex = request.getParameter("sex-reg");
-    	System.out.println(password);
+    	
     	User newUser = new User(birthdate, email, firstname, lastname, mobile, password, sex);
     	DataBaseResponse reqStatus = authDAO.registerNewUser(newUser);
     

@@ -1,6 +1,7 @@
 package net.obrien.facebookclone.dao;
 
 import net.obrien.facebookclone.model.User;
+import net.obrien.facebookclone.model.User.UserBuilder;
 import net.obrien.facebookclone.model.UserSignIn;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 import org.mindrot.jbcrypt.BCrypt;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class AuthDAO extends DataBaseConnector {
 
-    public AuthDAO(String jdbcURL, String jdbcUsername, String jdbcPassword) {
-        super(jdbcURL, jdbcUsername, jdbcPassword);
+    public AuthDAO(String jdbcURL, String jdbcUsername, String jdbcPassword, String jdbcDatabase) {
+        super(jdbcURL, jdbcUsername, jdbcPassword, jdbcDatabase);
     }
 
     public DataBaseResponse registerNewUser(User newUser)  {
@@ -38,7 +39,7 @@ public class AuthDAO extends DataBaseConnector {
                 String INSERT_USER = "insert into users (birthdate, email, firstname, lastname, mobile, password_hash, sex)" +
                         "values(?, ?, ?, ?, ? , ?,?)";
 
-                System.out.println(newUser.getPassword());
+                
                 
                 String PASSWORD_HASH = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
                 statement = jdbcConnection.prepareStatement(INSERT_USER);
@@ -103,13 +104,14 @@ public class AuthDAO extends DataBaseConnector {
         try{
             connect();
            
-            String GET_USER = "select about, birthdate, email, firstname, lastname, mobile, password_hash, sex from users where email = ? ;";
+            String GET_USER = "select id, about, birthdate, email, firstname, lastname, mobile, password_hash, sex from users where email = ? ;";
             
             statement = jdbcConnection.prepareStatement(GET_USER);
             statement.setString(1, userSignIn.getEmail());
             ResultSet resultSet = statement.executeQuery();
             
             if (resultSet.next()) {
+            	int id = resultSet.getInt("id");
                 String about = resultSet.getString("about");
                 String email = resultSet.getString("email");
                 String firstname = resultSet.getString("firstname");
@@ -118,8 +120,11 @@ public class AuthDAO extends DataBaseConnector {
                 String mobile = resultSet.getString("mobile");
                 String password_hash = resultSet.getString("password_hash");
                 String sex = resultSet.getString("sex");
+              
+                user = new  User.UserBuilder()
+                		.setId(id).setAbout(about).setEmail(email).setFirstname(firstname).setPassword(password_hash)
+                		.setLastname(lastname).setBirthdate(birthdate).setMobile(mobile).setSex(sex).build();
                 
-                user = new User(about, birthdate, email, firstname, lastname, mobile, password_hash, sex);
             }else {
             	
             	return new DataBaseResponse(false, "Invalid Email", 202);
@@ -133,7 +138,7 @@ public class AuthDAO extends DataBaseConnector {
             	return new DataBaseResponse(false, "Invalid Password", 202);
             }
             
-             return new DataBaseResponse(true, "Success", 200);
+             return new DataBaseResponse(true, "Success", 200, user);
        
 
         }catch (SQLException e){
