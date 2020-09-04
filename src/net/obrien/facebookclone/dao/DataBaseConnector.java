@@ -3,6 +3,7 @@ package net.obrien.facebookclone.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -39,16 +40,20 @@ public abstract class DataBaseConnector {
             	if (jdbcConnection == null || jdbcConnection.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 jdbcConnection = DriverManager.getConnection(jdbcURL + timeZone, jdbcUsername, jdbcPassword);
-                String CHECK_FOR_DATABASE = "SHOW DATABASES LIKE ? ;";
+                //String CHECK_FOR_DATABASE = "SHOW DATABASES LIKE ? ;";
                 
-                PreparedStatement statement = jdbcConnection.prepareStatement(CHECK_FOR_DATABASE);
-                statement.setNString(1, this.jdbcDatabaseName);
-                if(statement.executeUpdate() < 1) {
-                	statement.close();
-                	setUpDatabase();
-                }else {
-                	jdbcConnection.close();
-                }
+                ResultSet resultSet = jdbcConnection.getMetaData().getCatalogs();
+                while (resultSet.next()) {
+
+                	String databaseName = resultSet.getString(1);
+
+                	if(databaseName.equals(this.jdbcDatabaseName)) {
+                		jdbcConnection.close();
+                		return;
+                	}
+
+                	}
+                setUpDatabase();      
             	}
             }catch (Exception e) {
                 e.printStackTrace();
@@ -97,7 +102,7 @@ public abstract class DataBaseConnector {
 
 
     protected void connect() throws SQLException {
-    	// String USE_DATABASE = "USE " + this.jdbcDatabaseName +";";
+    	
         if (jdbcConnection == null || jdbcConnection.isClosed()) {
         	     	
             try {
@@ -110,12 +115,7 @@ public abstract class DataBaseConnector {
             
             jdbcConnection = DriverManager.getConnection(
                     jdbcURL + this.jdbcDatabaseName + timeZone, jdbcUsername, jdbcPassword);
-            // Statement statement = jdbcConnection.createStatement();
-           // if(statement.execute(USE_DATABASE)) {
-           // 	System.out.println("Connected to " + this.jdbcDatabaseName + " Database");
-           // 	statement.close();
-           // }
-         //   System.out.println("Error Connected to " + this.jdbcDatabaseName + " Database");
+         
         }
     }
 
@@ -124,6 +124,18 @@ public abstract class DataBaseConnector {
         if (jdbcConnection != null && !jdbcConnection.isClosed()) {
             jdbcConnection.close();
         }
+    }
+    
+    protected void tearDownDB() throws SQLException {
+    	
+        if (jdbcConnection != null && !jdbcConnection.isClosed()) {
+        
+            Statement statement = jdbcConnection.createStatement();
+            statement.executeUpdate("DROP DATABASE " + this.jdbcDatabaseName + " ;");
+            statement.close();
+            jdbcConnection.close();
+        }
+       
     }
 
 }

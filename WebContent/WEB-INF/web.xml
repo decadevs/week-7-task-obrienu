@@ -18,6 +18,11 @@
     
     <context-param>
         <param-name>jdbcDatabase</param-name>
+        <param-value>facebook</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>jdbcTestDatabase</param-name>
         <param-value>facebook_test</param-value>
     </context-param>
     

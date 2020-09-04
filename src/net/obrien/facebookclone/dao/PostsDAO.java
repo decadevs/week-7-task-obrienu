@@ -81,7 +81,11 @@ public class PostsDAO extends DataBaseConnector  {
 	 
 	 
 	 public DataBaseResponse getPosts(int page,int currentUserId, HttpServletRequest request) {
-		 HttpSession session = request.getSession();
+		 HttpSession session = null;
+		 if(request != null ) {
+			 session  = request.getSession();
+		 }
+		
 		 ArrayList<Integer> userLikes = new ArrayList<>();
 		 
 
@@ -94,20 +98,23 @@ public class PostsDAO extends DataBaseConnector  {
 	         connect();
 	         statement = jdbcConnection.prepareStatement(GET_CURRENT_USER_LIKES);
 	         statement.setInt(1, currentUserId );
-	         //id, post, user_id
+	        
 	         ResultSet resultSet = statement.executeQuery(); 
 	         
 	         while(resultSet.next()) {
 	        	 int post_id = resultSet.getInt("post_id");
 	        	 userLikes.add(post_id);
 	         }
-	         session.setAttribute("userLikes", userLikes);
+	         if(request != null) {
+	        	 session.setAttribute("userLikes", userLikes);
+	         }
+	         
 	         ArrayList<Post> posts = new ArrayList<>();
 	         statement.close();
 	         statement = jdbcConnection.prepareStatement(GET_POSTS);
 	         statement.setInt(1, OFFSET );
 	         statement.setInt(2, TOTAL_POST_PER_PAGE );
-	         //id, post, user_id
+	       
 	         resultSet = statement.executeQuery();    
 	         
 	         while(resultSet.next()) {

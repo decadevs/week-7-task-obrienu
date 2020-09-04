@@ -66,13 +66,15 @@ public class CommentDAO extends DataBaseConnector {
 	// COMMENTS SECTION
 
 	public DataBaseResponse getComments(int page, int post_id, int currentUserId, HttpServletRequest request) {
+		HttpSession session = null;
+		if(request != null) {
+			 session = request.getSession();
+		}
 		
-		
-		HttpSession session = request.getSession();
 		
 		 ArrayList<Integer> userCommentsLikes = new ArrayList<>();
 		 
-		ArrayList<Comment> comments = new ArrayList<>(); 
+		 ArrayList<Comment> comments = new ArrayList<>(); 
 		 int OFFSET = TOTAL_POST_PER_PAGE * (page - 1);
 		 PreparedStatement statement = null;
 		 User user;
@@ -82,7 +84,7 @@ public class CommentDAO extends DataBaseConnector {
 			connect();
 	         statement = jdbcConnection.prepareStatement(GET_CURRENT_USER_COMMENT_LIKES);
 	         statement.setInt(1, currentUserId );
-	         //id, post, user_id
+	        
 	         ResultSet resultSet = statement.executeQuery(); 
 	         
 	         while(resultSet.next()) {
@@ -90,7 +92,11 @@ public class CommentDAO extends DataBaseConnector {
 	        	 userCommentsLikes.add(comment_Id);
 	         }
 	         resultSet.close();
-	         session.setAttribute("userCommentsLikes", userCommentsLikes);
+	         
+	         if(request != null) {
+	        	 session.setAttribute("userCommentsLikes", userCommentsLikes);
+	 		}
+	         
 	     
 	         statement.close();
 			

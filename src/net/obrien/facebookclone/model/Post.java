@@ -124,6 +124,16 @@ public class Post {
 				return this;
 			}
 
+	 		public PostBuilder setPost(Post post) {
+	 			this.id = post.id;
+	 			this.post = post.post;
+	 			this.user = post.user;
+	 			this.created_at = post.created_at;
+	 			this.numberOfLikes = post.numberOfLikes;
+	 			this.numberOfComments = post.numberOfComments;
+	 			this.liked = post.liked;
+	 			return this;
+			}
 
 
 			public Post build() {

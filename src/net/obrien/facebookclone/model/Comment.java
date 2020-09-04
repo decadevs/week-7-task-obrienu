@@ -108,6 +108,17 @@ public class Comment {
 			return this;
 		}
 		
+		public CommentBuilder setComment(Comment comment) {
+			this.id = comment.id;
+			this.comment = comment.comment;
+			this.user = comment.user;
+			this.created_at = comment.created_at;
+			this.numberOfLikes = comment.numberOfLikes;
+			this.post_id = comment.post_id;
+			this.liked = comment.liked;
+			return this;
+		}
+		
 		public Comment build() {
 			return new Comment( id, comment, user,  created_at, numberOfLikes, post_id, liked);
 		}
