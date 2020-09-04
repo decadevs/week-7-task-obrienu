@@ -8,9 +8,10 @@ public class Post {
 	private String created_at;
 	private int numberOfLikes;
 	private int numberOfComments;
+	private boolean liked = false;
 	
 	
-	public Post(int id, String post, User user, String created_at, int numberOfLikes, int numberOfComments) {
+	public Post(int id, String post, User user, String created_at, int numberOfLikes, int numberOfComments, boolean liked) {
 
 		this.id = id;
 		this.post = post;
@@ -18,30 +19,13 @@ public class Post {
 		this.created_at = created_at;
 		this.numberOfLikes = numberOfLikes;
 		this.numberOfComments = numberOfComments;
+		this.liked = liked;
 	}
-	
-
-
-	public Post(String post, User user, String created_at, int numberOfLikes, int numberOfComments) {
-
-		this.post = post;
-		this.user = user;
-		this.created_at = created_at;
-		this.numberOfLikes = numberOfLikes;
-		this.numberOfComments = numberOfComments;
-	}
-
-
-
 
 	public int getId() {
 		return id;
 	}
 
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 
 	public String getPost() {
@@ -49,19 +33,6 @@ public class Post {
 	}
 
 
-	public void setPost(String post) {
-		this.post = post;
-	}
-
-
-	public User getUser_id() {
-		return user;
-	}
-
-
-	public void setUser_id(User user) {
-		this.user = user;
-	}
 
 
 	public String getCreated_at() {
@@ -69,19 +40,12 @@ public class Post {
 	}
 
 
-	public void setCreated_at(String created_at) {
-		this.created_at = created_at;
-	}
-
 
 	public int getNumberOfLikes() {
 		return numberOfLikes;
 	}
 
 
-	public void setNumberOfLikes(int numberOfLikes) {
-		this.numberOfLikes = numberOfLikes;
-	}
 
 
 	public int getNumberOfComments() {
@@ -89,9 +53,82 @@ public class Post {
 	}
 
 
-	public void setNumberOfComments(int numberOfComments) {
-		this.numberOfComments = numberOfComments;
+	public User getUser() {
+		return user;
 	}
+
 	
+	 public boolean isLiked() {
+		return liked;
+	}
+
+
+		public static class PostBuilder {
+	 		private int id;
+	 		private String post;
+	 		private User user ;
+	 		private String created_at;
+	 		private int numberOfLikes;
+	 		private int numberOfComments;
+	 		private boolean liked;
+
+	 		public PostBuilder setId(int id) {
+	 			this.id = id;
+	 			return this;
+	 		}
+
+
+
+	 		public PostBuilder setPost(String post) {
+	 			this.post = post;
+	 			return this;
+	 		}
+
+
+
+
+	 		public PostBuilder setCreated_at(String created_at) {
+	 			this.created_at = created_at;
+	 			return this;
+	 		}
+
+
+
+
+
+	 		public PostBuilder setNumberOfLikes(int numberOfLikes) {
+	 			this.numberOfLikes = numberOfLikes;
+	 			return this;
+	 		}
+
+
+	 		public PostBuilder setNumberOfComments(int numberOfComments) {
+	 			this.numberOfComments = numberOfComments;
+	 			return this;
+	 		}
+
+
+
+
+	 		public PostBuilder setUser(User user) {
+	 			this.user = user;
+	 			return this;
+	 		}
+	 		
+	 		
+	 		
+		 
+		 
+	 		public PostBuilder setLiked(boolean liked) {
+				this.liked = liked;
+				return this;
+			}
+
+
+
+			public Post build() {
+	 			return new Post( id, post, user, created_at, numberOfLikes,  numberOfComments, liked);
+	 		}
+	 }
 	
 }

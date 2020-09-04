@@ -13,10 +13,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/stylesheets/main.css">
+    <link rel="stylesheet" href="assets/stylesheets/main.css">
     <title>Sign In / Sign Up</title>
-</head>
-<style>
+    
+    <style>
 .fbblue-color, .fa-facebook, .nav-icons:hover, .active div {
   color: #1877f2 !important;
 }
@@ -182,6 +182,8 @@ main.profile {
 }
 /*# sourceMappingURL=main.css.map */
 </style>
+</head>
+
 <body>
 
     <main class="login">
