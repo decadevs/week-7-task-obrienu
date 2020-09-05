@@ -17,6 +17,11 @@ import net.obrien.facebookclone.model.Comment;
 import net.obrien.facebookclone.model.Post;
 import net.obrien.facebookclone.model.User;
 
+/**
+ * This class contains tests for the Comments DAO class
+ * @author decagon
+ *
+ */
 public class TestCommentDAOTest {
 	AuthDAO authDAO = null;
 	PostsDAO postsDAO = null;

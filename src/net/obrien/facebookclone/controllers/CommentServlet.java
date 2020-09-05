@@ -46,7 +46,8 @@ public class CommentServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
+	/**Method handles all post requests related to user comments.
+	 * It checks the route path and calls the appropriate method to handle each request
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,6 +77,14 @@ public class CommentServlet extends HttpServlet {
 	}
 	
 	
+	/**
+	 * Takes user comments, creates a Comment object and passes it the the
+	 * Comment DAO to add to the database
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	protected void makeComment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String text = request.getParameter("comment");
@@ -88,6 +97,14 @@ public class CommentServlet extends HttpServlet {
 		
 	}
 	
+	/**
+	 * Takes users updated comments, creates a Comment object and passes it the the
+	 * Comment DAO to add to the database
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 protected void updateComment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String text = request.getParameter("comment");
@@ -99,6 +116,13 @@ protected void updateComment(HttpServletRequest request, HttpServletResponse res
 	}
 
 
+/**
+ * Handles deleting of comments
+ * @param request
+ * @param response
+ * @throws ServletException
+ * @throws IOException
+ */
 protected void deleteComment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 	int post_id = Integer.parseInt(request.getParameter("post_id"));
@@ -108,6 +132,7 @@ protected void deleteComment(HttpServletRequest request, HttpServletResponse res
 	response.sendRedirect(request.getHeader("referer"));
 	
 }
+
 
 protected void likeComment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	ArrayList<Integer> userCommentsLikes = (ArrayList<Integer>)  request.getSession().getAttribute("userCommentsLikes");

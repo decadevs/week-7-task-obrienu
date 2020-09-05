@@ -12,6 +12,13 @@ import net.obrien.facebookclone.model.Post;
 import net.obrien.facebookclone.model.User;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 
+/**
+ * This DAO class provides CRUD database operations for User 
+ * it extends the DataBaseConnector class which 
+ * has methods that enables database connection and setup
+ * @author O'Brien
+ *
+ */
 public class UserDAO extends DataBaseConnector  {
 
 	 public UserDAO(String jdbcURL, String jdbcUsername, String jdbcPassword, String jdbcDatabase) {
@@ -46,7 +53,12 @@ public class UserDAO extends DataBaseConnector  {
 	String GET_USER = "SELECT * FROM users WHERE id = ?";
 	
 	
-	
+	/**
+	 * Method reads user details and  posts for a particular user 
+	 * specified by the user id.
+	 * @param requestedUserId
+	 * @return DataBaseResponse
+	 */
 	public DataBaseResponse userDetails(int requestedUserId) {
 		
 		 PreparedStatement statement = null;
@@ -74,10 +86,9 @@ public class UserDAO extends DataBaseConnector  {
 	        	
 	         }else {
 	        	 return new DataBaseResponse(false, "No User Found", 404);
-	         }
-	         
-	        
+	         }   
 	         statement.close();
+	         //Fetch user posts
 	         statement = jdbcConnection.prepareStatement(GET_USER_POSTS);
 	         statement.setInt(1, requestedUserId);
 	         resultSet = statement.executeQuery();
@@ -97,6 +108,7 @@ public class UserDAO extends DataBaseConnector  {
 	            
 	         }
 	        
+	        // returns a map of object containing users post and user object
 	        Map<String, Object> userData = new HashMap<>();
 	        userData.put("user", user);
 	        userData.put("posts", posts);

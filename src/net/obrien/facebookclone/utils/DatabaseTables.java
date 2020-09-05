@@ -1,5 +1,10 @@
 package net.obrien.facebookclone.utils;
 
+/**
+ * Contains all the setup for the database tables
+ * @author decagon
+ *
+ */
 public enum DatabaseTables {
 	
 	 USERS("CREATE TABLE `users` (\n" + 

@@ -9,6 +9,13 @@ import java.sql.Statement;
 
 import net.obrien.facebookclone.utils.DatabaseTables;
 
+/**
+ * Handles connection to database. the class also handles  database
+ * set up on first initialisation of app. It also has database teardown functionality 
+ * for testing purpose
+ * @author Obrien
+ *
+ */
 public abstract class DataBaseConnector {
 
     private String jdbcURL;
@@ -33,8 +40,12 @@ public abstract class DataBaseConnector {
         handleSetUp();
     }
     
+    /**
+     * Method connects to mysql database and checks if the specified database 
+     * name exists. if it doesn't it calls the database setup nethod whic sets 
+     * up the database
+     */
     protected void handleSetUp()  {
-        
         	     	
             try {
             	if (jdbcConnection == null || jdbcConnection.isClosed()) {
@@ -62,7 +73,10 @@ public abstract class DataBaseConnector {
    
     }
     
-    
+    /**
+     * Method sets up a new database with all the required fields and 
+     * tanles
+     */
     private void setUpDatabase() {
     	String USE_DATABASE = "USE " + this.jdbcDatabaseName +";";
     	String CREATE_DATABASE = "CREATE DATABASE " + this.jdbcDatabaseName + ";";
@@ -101,6 +115,10 @@ public abstract class DataBaseConnector {
     }
 
 
+    /**
+     * handles connnection to the database via JDBC Drive
+     * @throws SQLException
+     */
     protected void connect() throws SQLException {
     	
         if (jdbcConnection == null || jdbcConnection.isClosed()) {
@@ -120,12 +138,21 @@ public abstract class DataBaseConnector {
     }
 
 
+    /**
+     * Handles disconnection from the database
+     * @throws SQLException
+     */
     protected void disconnect() throws SQLException {
         if (jdbcConnection != null && !jdbcConnection.isClosed()) {
             jdbcConnection.close();
         }
     }
     
+    /**
+     * Method handles the tearing down of the database, used mainly
+     * for testing purpose
+     * @throws SQLException
+     */
     protected void tearDownDB() throws SQLException {
     	
         if (jdbcConnection != null && !jdbcConnection.isClosed()) {

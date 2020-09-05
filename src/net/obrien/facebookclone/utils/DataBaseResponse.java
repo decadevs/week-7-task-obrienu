@@ -1,5 +1,13 @@
 package net.obrien.facebookclone.utils;
 
+/**
+ * Class serves as a return class for DAO method operations
+ * the status field tells if the operation was successful or not
+ * the code field is the status code of the operation
+ * the data serves as the returned object for read operations 
+ * @author decagon
+ *
+ */
 public class DataBaseResponse {
     private boolean status;
     private String message;

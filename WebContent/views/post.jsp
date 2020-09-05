@@ -445,12 +445,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method="POST" action="posts/edit?post_id=<c:out value="${post.id}"/>">
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <textarea class="form-control" id="message-text" name="post"><c:out value="${post.post}"/></textarea>
                         </div>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>
                 </div>
 

@@ -13,6 +13,11 @@ import net.obrien.facebookclone.model.User;
 import net.obrien.facebookclone.model.UserSignIn;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 
+/**
+ * This Class contains tests for the Auth DAO Class
+ * @author obrien
+ *
+ */
 public class AuthDAOTest {
 	AuthDAO authDAO;
 	String jdbcURL = "jdbc:mysql://localhost:3306/";

@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This DAO class provides CRUD database operations for t UserSignUp
+ * This DAO class provides CRUD database operations for User sign 
+ * up and authentication. it extends the DataBaseConnector class which 
+ * has methods that enables database connection and setup
  * @author O'Brien
  *
  */
@@ -26,6 +28,14 @@ public class AuthDAO extends DataBaseConnector {
         super(jdbcURL, jdbcUsername, jdbcPassword, jdbcDatabase);
     }
 
+    /**
+     * A create operation, validates user informtion and adds new users to the database
+     * Method first checks if the user is unique by checking if their email and pone number
+     * already exists in the database, It also hashes the password before saving the dails to
+     * the datbase
+     * @param newUser
+     * @return DataBaseResponse object
+     */
     public DataBaseResponse registerNewUser(User newUser)  {
         PreparedStatement statement = null;
             try{
@@ -72,6 +82,12 @@ public class AuthDAO extends DataBaseConnector {
     };
 
 
+    /**
+     * Checks if user provided email already exists in the database
+     * @param email 
+     * @return a boolean 
+     * @throws SQLException
+     */
     private boolean checkIfUserEmailAlreadyExists(String email) throws SQLException {
         String CHECK_USER_EXISTS = "select count(*) as count from users where email = ?;";
         PreparedStatement statement = jdbcConnection.prepareStatement(CHECK_USER_EXISTS);
@@ -84,6 +100,12 @@ public class AuthDAO extends DataBaseConnector {
         return count == 1 ? true : false;
     }
 
+    /**
+     * Checks if user provided mobile number already exists in the database
+     * @param mobile
+     * @return boolean
+     * @throws SQLException
+     */
     private boolean checkIfUserMobileAlreadyExists(String mobile) throws SQLException {
         String CHECK_USER_EXISTS = "select count(*) as count from users where mobile = ? ;";
         PreparedStatement statement = jdbcConnection.prepareStatement(CHECK_USER_EXISTS);
@@ -96,7 +118,13 @@ public class AuthDAO extends DataBaseConnector {
         return count == 1 ? true : false;
     }
 
-    
+    /**
+     * Takes in user login credentials and compares it to database records
+     * Method also compares the hashed password in the database to the user 
+     * provided password
+     * @param userSignIn
+     * @return DataBaseResponse object
+     */
     public DataBaseResponse userLogin(UserSignIn userSignIn) {
     	
     	PreparedStatement statement = null;

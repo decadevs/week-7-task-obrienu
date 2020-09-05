@@ -16,7 +16,10 @@ import net.obrien.facebookclone.utils.DataBaseResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
+/**
+ * Handles all authentication routes, 
+ * login, sign up and logout
+ */
 public class AuthServlet extends HttpServlet {
     /**
 	 * 
@@ -32,7 +35,10 @@ public class AuthServlet extends HttpServlet {
 	        authDAO = new AuthDAO(jdbcURL, jdbcUsername, jdbcPassword, jdbcDatabase);
 	 
 	    }
-
+	    
+	  /**
+	   * Checks the path calls the approprate method to handle each request
+	   */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	try {
     		String action = request.getServletPath();
@@ -50,6 +56,9 @@ public class AuthServlet extends HttpServlet {
     	
     }
     
+    /**
+	   * Checks the path calls the approprate method to handle each request
+	   */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	        String action = request.getServletPath();
@@ -70,6 +79,14 @@ public class AuthServlet extends HttpServlet {
     }
     
     
+    /**
+     * Method clears user session on signout
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws IOException
+     * @throws ServletException
+     */
     private void signOut(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
     	 HttpSession session = request.getSession();
     	 session.invalidate();
@@ -77,6 +94,15 @@ public class AuthServlet extends HttpServlet {
     }
     
     
+    /**
+     * Checks for user login details, validates and sets user session
+     * if credentials are valid or redirects back to the login page otherwise
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws IOException
+     * @throws ServletException
+     */
     private void login(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
     	
      DataBaseResponse reqStatus = authDAO.userLogin(new UserSignIn(request.getParameter("login-email"), request.getParameter("login-password")));
@@ -97,6 +123,15 @@ public class AuthServlet extends HttpServlet {
     }
     
     
+    
+    /**
+     * Handles user sign up
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws IOException
+     * @throws ServletException
+     */
     private void signIn(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
     	String birthdate = request.getParameter("birthdate-reg");
     	String email = request.getParameter("email-reg");

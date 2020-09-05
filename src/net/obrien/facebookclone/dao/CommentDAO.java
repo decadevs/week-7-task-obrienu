@@ -13,6 +13,13 @@ import net.obrien.facebookclone.model.Post;
 import net.obrien.facebookclone.model.User;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 
+/**
+ * This DAO class provides CRUD database operations for User Comments
+ * it extends the DataBaseConnector class which 
+ * has methods that enables database connection and setup
+ * @author O'Brien
+ *
+ */
 public class CommentDAO extends DataBaseConnector {
 	
 	 public CommentDAO(String jdbcURL, String jdbcUsername, String jdbcPassword, String jdbcDatabase) {
@@ -63,8 +70,18 @@ public class CommentDAO extends DataBaseConnector {
 	 
 	 
 
-	// COMMENTS SECTION
-
+	
+	/**
+	 * Method get comments for a particular post, It handles pagination functionality
+	 * Sending a total number of pages specified by the 'TOTAL_POST_PER_PAGE' field
+	 * Method also determines a users liked comments and setting the liked fied of each comment 
+	 * to true if it was liked by the present user.
+	 * @param page
+	 * @param post_id
+	 * @param currentUserId
+	 * @param request
+	 * @return DataBaseResponse object
+	 */
 	public DataBaseResponse getComments(int page, int post_id, int currentUserId, HttpServletRequest request) {
 		HttpSession session = null;
 		if(request != null) {
@@ -86,7 +103,7 @@ public class CommentDAO extends DataBaseConnector {
 	         statement.setInt(1, currentUserId );
 	        
 	         ResultSet resultSet = statement.executeQuery(); 
-	         
+	         //Gets a list of users liked comments
 	         while(resultSet.next()) {
 	        	 int comment_Id = resultSet.getInt("comment_Id");
 	        	 userCommentsLikes.add(comment_Id);
@@ -120,6 +137,8 @@ public class CommentDAO extends DataBaseConnector {
 	             user = new User.UserBuilder().setFirstname(firstname)
 	            		 .setLastname(lastname).setId(user_id)
 	            		 .build();  
+	             //builds each comment and sets the liked field by compairing it to the users
+	             //liked comments.
 	             comment = new Comment.CommentBuilder().setComment(comment_text)
 	            		 .setLiked(userCommentsLikes.contains(id))
 	            		 .setId(id).setCreated_at(created_at)
@@ -153,7 +172,11 @@ public class CommentDAO extends DataBaseConnector {
 	}
 	
 	
-	
+	/**
+	 * Method takes a comment and inserts it into the database
+	 * @param comment
+	 * @return DataBaseResponse object
+	 */
 	public DataBaseResponse createNewComment(Comment comment) {
 		String UPDATE_POST_COMMENTS = "UPDATE posts SET comments = comments + 1 WHERE id = ? ;";
 		 PreparedStatement statement = null;
@@ -192,7 +215,11 @@ public class CommentDAO extends DataBaseConnector {
 		 
 	 }
 	 
-	 
+	/**
+	 * Method handles comments update operations
+	 * @param comment
+	 * @return DataBaseResponse object
+	 */
 	 public DataBaseResponse updateComment(Comment comment) {
 		 
 		 PreparedStatement statement = null;
@@ -226,7 +253,14 @@ public class CommentDAO extends DataBaseConnector {
 		 
 	 }
 	 
-
+	/**
+	* Method takes handles comments delete operations
+	* It deletes a comment from the database and decreases the comments field
+	* of the associated post by 1
+	* @param comment_id
+	* @param user_id
+	* @return DataBaseResponse object
+	*/
 	public DataBaseResponse deleteComment(int comment_id, int post_id) {
 				
 		
@@ -265,7 +299,13 @@ public class CommentDAO extends DataBaseConnector {
 	}
 
 
-
+	/**
+	 * Method handles creations of like, It adds likes to the likes table and 
+	 * increases a comments liked field by one for the associated comment
+	 * @param comment_id
+	 * @param user_id
+	 * @return DataBaseResponse object
+	 */
 		public DataBaseResponse likeComment(int comment_id, int user_id) {
 		
 		
@@ -311,7 +351,13 @@ public class CommentDAO extends DataBaseConnector {
 		}
 		
 		
-
+		/**
+		 * Method handles deleting of likes record, It remoc=ves likes from the likes table and 
+		 * reduces a comments liked field by one for the associated comment
+		 * @param comment_id
+		 * @param user_id
+		 * @return DataBaseResponse object
+		 */
 		public DataBaseResponse unlikeComment(int comment_id, int user_id) {
 			
 			String UPDATE_COMMENT_LIKES = "UPDATE comments SET likes = likes - 1 WHERE id = ? ;";

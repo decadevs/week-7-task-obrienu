@@ -18,6 +18,11 @@ import net.obrien.facebookclone.model.Post;
 import net.obrien.facebookclone.model.User;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 
+/**
+ * This class contains Tests for User DAO class
+ * @author decagon
+ *
+ */
 public class UserDAOTest {
 
 	AuthDAO authDAO = null;

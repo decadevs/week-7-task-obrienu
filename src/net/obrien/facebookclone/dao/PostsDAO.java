@@ -13,6 +13,11 @@ import net.obrien.facebookclone.model.Post;
 import net.obrien.facebookclone.model.User;
 import net.obrien.facebookclone.utils.DataBaseResponse;
 
+/**
+ * Class handles CRUD operation for all user posts
+ * @author Obrien
+ *
+ */
 public class PostsDAO extends DataBaseConnector  {
 	 
 	 public PostsDAO(String jdbcURL, String jdbcUsername, String jdbcPassword, String jdbcDatabase) {
@@ -79,7 +84,16 @@ public class PostsDAO extends DataBaseConnector  {
 	 
 
 	 
-	 
+	 /**
+	  * Method handles posts read functionallity, it reads users posts from 
+	  * the database in batches speciefied by the page parameter and the 
+	  * 'TOTAL_POST_PER_PAGE' fields. it also sets the liked field of a post based
+	  * off if the current users list of liked post
+	  * @param page
+	  * @param currentUserId
+	  * @param request
+	  * @return DataBaseResponse object
+	  */
 	 public DataBaseResponse getPosts(int page,int currentUserId, HttpServletRequest request) {
 		 HttpSession session = null;
 		 if(request != null ) {
@@ -95,7 +109,8 @@ public class PostsDAO extends DataBaseConnector  {
 		 Post post;
 		 User user;
 	     try{
-	         connect();
+	    	 //gets users liked posts and saves it in a list which is saved in session
+	         connect(); 
 	         statement = jdbcConnection.prepareStatement(GET_CURRENT_USER_LIKES);
 	         statement.setInt(1, currentUserId );
 	        
@@ -109,6 +124,7 @@ public class PostsDAO extends DataBaseConnector  {
 	        	 session.setAttribute("userLikes", userLikes);
 	         }
 	         
+	         //Posts from the database
 	         ArrayList<Post> posts = new ArrayList<>();
 	         statement.close();
 	         statement = jdbcConnection.prepareStatement(GET_POSTS);
@@ -130,7 +146,7 @@ public class PostsDAO extends DataBaseConnector  {
 	             user = new User.UserBuilder().setFirstname(firstname).setLastname(lastname).setId(user_id)
 	            		 .build();
 	             
-	             
+	             //Builds the posts and sets the liked fied based off the users liked list
 	             post = new Post.PostBuilder().setCreated_at(created_at).setId(id).setPost(post_text).setUser(user)
 	            		 .setNumberOfComments(comments)
 	            		 .setLiked(userLikes.contains(id))
@@ -165,7 +181,11 @@ public class PostsDAO extends DataBaseConnector  {
 		 
 	 }
 
-	 
+	 /**
+	  * Method handles create opreations, adds users posts to the database
+	  * @param post
+	  * @return
+	  */
 	 public DataBaseResponse createNewPost(Post post) {
 		 
 		 PreparedStatement statement = null;
@@ -196,7 +216,11 @@ public class PostsDAO extends DataBaseConnector  {
 		 
 	 }
 	 
-	 
+	 /**
+	  * Method post updates 
+	  * @param post
+	  * @return DataBaseResponse object
+	  */
 	 public DataBaseResponse updatePost(Post post) {
 		 
 		 PreparedStatement statement = null;
@@ -229,6 +253,11 @@ public class PostsDAO extends DataBaseConnector  {
 	 }
 	 
 
+	 /**
+	  * Method handles deletion of posts from the database record
+	  * @param post_id
+	  * @return DataBaseResponse object
+	  */
 	public DataBaseResponse deletePost(int post_id) {
 		 PreparedStatement statement = null;
 	     try{
@@ -259,6 +288,12 @@ public class PostsDAO extends DataBaseConnector  {
 	}
 	
 	
+	/**
+	 * Method fetches a post with specified id from the 
+	 * database record.
+	 * @param post_id
+	 * @return DataBaseResponse object
+	 */
 	public DataBaseResponse getPost(int post_id) {
 		
 		 PreparedStatement statement = null;
@@ -268,8 +303,7 @@ public class PostsDAO extends DataBaseConnector  {
 	         connect();
 	         statement = jdbcConnection.prepareStatement(GET_ONE_POST);
 	         statement.setInt(1, post_id);
-	         
-	         //id, post, user_id
+	        
 	         resultSet = statement.executeQuery();
 	         
 	         if (resultSet.next()) {
@@ -311,6 +345,13 @@ public class PostsDAO extends DataBaseConnector  {
 		 
 	}
 	
+	/**
+	 * Mehtod handles posts likes, it adds a like record to the database
+	 * and update the likes field of the associated post 
+	 * @param post_id
+	 * @param user_id
+	 * @return DataBaseResponse object
+	 */
 	public DataBaseResponse likePost(int post_id, int user_id) {
 		
 		String UPDATE_POST_LIKES = "UPDATE posts SET likes = likes + 1 WHERE id = ? ;";
@@ -354,14 +395,17 @@ public class PostsDAO extends DataBaseConnector  {
 		
 	}
 	
-public DataBaseResponse unlikePost(int post_id, int user_id) {
+	/**
+	 * Method handles unlike operation removing like records from database 
+	 * and decreasing the likes field of the associated post
+	 * @param post_id
+	 * @param user_id
+	 * @return DataBaseResponse object
+	 */
+	public DataBaseResponse unlikePost(int post_id, int user_id) {
 		
-		String UPDATE_POST_LIKES = "UPDATE posts SET likes = likes - 1 WHERE id = ? ;";
-
-		
+		String UPDATE_POST_LIKES = "UPDATE posts SET likes = likes - 1 WHERE id = ? ;";	
 		String DELETE_POST_LIKES = "DELETE FROM post_likes WHERE post_id = ? AND user_id = ? ;";
-		
-		
 
 		PreparedStatement statement = null;
 		
