@@ -1,0 +1,164 @@
+.fbblue-color, .fa-facebook, .nav-icons:hover, .active div {
+  color: #1877f2 !important;
+}
+
+.fbblue-bg {
+  background-color: #1877f2 !important;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+/* NAV UTILS */
+nav {
+  background-color: #fff;
+}
+
+.bottom-boder {
+  border-bottom: solid 1px grey;
+}
+
+/* FACEBOOK ICON */
+.fa-facebook {
+  font-size: 3rem;
+}
+
+.nav-icons {
+  font-size: 2rem;
+  padding: 0 2rem;
+}
+
+/* NAV LINK */
+.nav-link {
+  color: #222222;
+  cursor: pointer;
+}
+
+.active {
+  border-bottom: solid 2px #1877f2;
+}
+
+main.login form {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+main.login .container {
+  padding-top: 8rem;
+}
+
+main.login .left-side {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-weight: bold;
+}
+
+main.login .left-side .text-left {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.custom-radio {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  margin: 0 15px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  line-height: 1.5rem;
+}
+
+.radio-label {
+  line-height: 2rem;
+  margin-bottom: 0;
+}
+
+/* Profile page */
+main.profile {
+  padding-top: 5rem;
+}
+
+.top-profile-section {
+  background-color: #fff;
+}
+
+.profile-bg {
+  height: 20rem;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  padding-top: 10rem;
+}
+
+.profile-bg .profile-image {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+  border: solid 3px #fff;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  margin: 0 auto;
+  position: relative;
+  top: 1rem;
+}
+
+.about .profile-name {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+/* ***** POST STYLING***** */
+.post-header, .comment .comment-header {
+  height: 3rem;
+}
+
+.post-header .post-profile-image, .comment .comment-header .post-profile-image, .comment .comment-header .comment-profile-image {
+  max-width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background-position: center;
+  background-size: cover;
+}
+
+.post-header .user-name, .comment .comment-header .user-name {
+  margin: 0;
+}
+
+.post-header .post-date, .comment .comment-header .post-date {
+  margin: 0;
+}
+
+/* *****COMMENTS STYLING***** */
+.comment .comment-header .comment-date {
+  margin: 0;
+}
+/*# sourceMappingURL=main.css.map */
